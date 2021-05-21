@@ -42,7 +42,7 @@ func (c *Client) readRecurse(secrets map[string]interface{}, path string) error 
 func (c *Client) getSecretData(path string) (map[string]interface{}, error) {
 	data, err := c.Read(path)
 	if err != nil {
-		log.Error(err)
+		log.Fatal(err)
 		return map[string]interface{}{}, err
 	}
 	if data == nil || c.ExtractData(data.Data) == nil {
