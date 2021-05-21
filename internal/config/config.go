@@ -1,4 +1,4 @@
-package vault
+package config
 
 import "github.com/spf13/viper"
 
@@ -18,11 +18,9 @@ func GetDestinationConfig() *Config {
 }
 
 func getConfig(t string) *Config {
-	config := &Config{
+	return &Config{
 		Address:     viper.GetString(t + ".address"),
 		Token:       viper.GetString(t + ".token"),
 		TLSInsecure: viper.GetBool(t + ".insecure"),
 	}
-
-	return config
 }

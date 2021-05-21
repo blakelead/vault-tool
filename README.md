@@ -42,10 +42,17 @@ Copy secrets from one Vault to another:
 > vault-tool migrate --config vault-tool.yaml secret/path secret/otherpath
 ```
 
+Delete entire path:
+
+```bash
+> vault-tool delete --config vault-tool.yaml secret/path
+```
+
 ## Implemented Features
 
 - Copy secrets from one path to another in the same or different Vaults
 - Output secrets in stdout in JSON format
+- Delete secret or path
 
 ## Planned Features
 
@@ -56,7 +63,6 @@ Copy secrets from one Vault to another:
 - Check token capabilities/ttl before write operation
 - Run all operations concurrently
 - Write secrets from JSON
-- Delete secrets
 - Create env variable from secret
 - Add regex capabilities in path
 - Autocompletion

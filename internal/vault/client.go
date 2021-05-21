@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/blakelead/vault-tool/internal/config"
 	"github.com/hashicorp/vault/api"
 )
 
@@ -14,7 +15,7 @@ type Client struct {
 }
 
 // NewClient returns a new Vault Client
-func NewClient(path string, config *Config) (*Client, error) {
+func NewClient(path string, config *config.Config) (*Client, error) {
 	vaultConfig := api.DefaultConfig()
 	vaultConfig.Address = config.Address
 	vaultConfig.ConfigureTLS(&api.TLSConfig{
@@ -39,7 +40,7 @@ func NewClient(path string, config *Config) (*Client, error) {
 	var version string
 	tokens := strings.Split(path, "/")
 	if len(tokens) == 0 {
-		return nil, fmt.Errorf("Invalid path")
+		return nil, fmt.Errorf("invalid path")
 	}
 	if mount, ok := mounts[tokens[0]+"/"]; ok {
 		if ver, ok := mount.Options["version"]; ok {
@@ -47,7 +48,7 @@ func NewClient(path string, config *Config) (*Client, error) {
 		}
 	}
 	if version == "" {
-		return nil, fmt.Errorf("Could not get engine version")
+		return nil, fmt.Errorf("could not get engine version. This can happen if requested engine in not enabled, or root path does not exist")
 	}
 
 	return &Client{vaultClient, version}, nil
@@ -58,44 +59,12 @@ func (c *Client) Close() {
 	c.vaultClient.ClearToken()
 }
 
-func (c *Client) Read(path string) (*api.Secret, error) {
-	if c.engineVersion == "1" {
-		return c.vaultClient.Logical().Read(path)
+// insert 'data' or 'metadata' key in secret path
+func insert(path string, key string) string {
+	pathParts := strings.Split(path, "/")
+	if len(pathParts) > 1 {
+		return fmt.Sprintf("%s/%s/%s", pathParts[0], key, strings.Join(pathParts[1:], "/"))
 	} else {
-		return c.vaultClient.Logical().Read(insert(path, "data"))
-	}
-}
-
-func (c *Client) List(path string) (*api.Secret, error) {
-	if c.engineVersion == "1" {
-		return c.vaultClient.Logical().List(path)
-	} else {
-		return c.vaultClient.Logical().List(insert(path, "metadata"))
-	}
-}
-
-func (c *Client) Write(path string, data map[string]interface{}) (*api.Secret, error) {
-	if c.engineVersion == "1" {
-		return c.vaultClient.Logical().Write(path, data)
-	} else {
-		secret := map[string]interface{}{"data": data}
-		return c.vaultClient.Logical().Write(insert(path, "data"), secret)
-	}
-}
-
-func (c *Client) ExtractData(data map[string]interface{}) map[string]interface{} {
-	if c.engineVersion == "1" {
-		return data
-	} else {
-		return data["data"].(map[string]interface{})
-	}
-}
-
-func insert(path string, token string) string {
-	tokens := strings.Split(path, "/")
-	if len(tokens) > 1 {
-		return fmt.Sprintf("%s/%s/%s", tokens[0], token, strings.Join(tokens[1:], "/"))
-	} else {
-		return fmt.Sprintf("%s/%s", tokens[0], token)
+		return fmt.Sprintf("%s/%s", pathParts[0], key)
 	}
 }

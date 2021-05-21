@@ -1,9 +1,8 @@
 module github.com/blakelead/vault-tool
 
-go 1.15
+go 1.16
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/hashicorp/vault/api v1.0.4
 	github.com/magiconair/properties v1.8.4 // indirect

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	gopath "path"
 
+	"github.com/hashicorp/vault/api"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -61,4 +62,31 @@ func (c *Client) getSecretPaths(path string) ([]interface{}, error) {
 		return []interface{}{}, err
 	}
 	return data.Data["keys"].([]interface{}), nil
+}
+
+func (c *Client) Read(path string) (*api.Secret, error) {
+	if c.engineVersion == "1" {
+		return c.vaultClient.Logical().Read(path)
+	} else {
+		return c.vaultClient.Logical().Read(insert(path, "data"))
+	}
+}
+
+func (c *Client) List(path string) (*api.Secret, error) {
+	if c.engineVersion == "1" {
+		return c.vaultClient.Logical().List(path)
+	} else {
+		return c.vaultClient.Logical().List(insert(path, "metadata"))
+	}
+}
+
+func (c *Client) ExtractData(data map[string]interface{}) map[string]interface{} {
+	if c.engineVersion == "1" {
+		return data
+	} else {
+		if data["data"] == nil {
+			return nil
+		}
+		return data["data"].(map[string]interface{})
+	}
 }
