@@ -4,7 +4,27 @@ A command line tool that makes working with Hashicorp Vault easier.
 
 ## Disclaimer
 
-This tool is in early stage of development and should not be used to handle production Vault secrets.
+This tool is in early stage of development and should not be used to handle important/production secrets.
+
+## Usage
+
+```bash
+Usage:
+  vault-tool [command]
+
+Available Commands:
+  delete      Delete secrets
+  dump        Dump secrets to stdout
+  help        Help about any command
+  migrate     Migrate secrets
+
+Flags:
+      --config string   config file (default is $HOME/.vault-tool.yaml) (default ".vault-tool.yaml")
+  -h, --help            help for vault-tool
+  -v, --version         version for vault-tool
+```
+
+Operations apply to kv1 and kv2 secrets.
 
 ## Quick start
 
@@ -24,7 +44,7 @@ destination:
   insecure: true
 ```
 
-Print secrets in path recursively:
+Print all secrets under a path:
 
 ```bash
 > vault-tool dump --config vault-tool.yaml secret/path
@@ -38,23 +58,17 @@ Print secrets in path recursively:
 }
 ```
 
-Copy secrets from one Vault to another:
+Copy secrets from one Vault to another (or from one path to another in the same Vault):
 
 ```bash
 > vault-tool migrate --config vault-tool.yaml secret/path secret/otherpath
 ```
 
-Delete entire path:
+Delete all secrets under a path:
 
 ```bash
 > vault-tool delete --config vault-tool.yaml secret/path
 ```
-
-## Implemented Features
-
-- Copy secrets from one path to another in the same or different Vaults
-- Output secrets in stdout in JSON format
-- Delete secret or path
 
 ## Planned Features
 
@@ -64,7 +78,7 @@ Delete entire path:
 - Add other types of authentication (userpass, ldap, certs)
 - Check token capabilities/ttl before write operation
 - Run all operations concurrently
-- Write secrets from JSON
+- Write secrets from JSON dump
 - Create env variable from secret
 - Add regex capabilities in path
 - Autocompletion
