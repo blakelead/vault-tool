@@ -35,6 +35,6 @@ func (c *Client) Delete(path string) (*api.Secret, error) {
 	if c.engineVersion == "1" {
 		return c.vaultClient.Logical().Delete(path)
 	} else {
-		return c.vaultClient.Logical().Delete(insert(path, "data"))
+		return c.vaultClient.Logical().Delete(insert(path, "metadata"))
 	}
 }
