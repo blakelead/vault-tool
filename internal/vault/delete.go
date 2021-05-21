@@ -1,12 +1,16 @@
 package vault
 
 import (
+	"fmt"
 	gopath "path"
 
 	"github.com/hashicorp/vault/api"
 )
 
 func (c *Client) DeleteSecrets(path string) error {
+	if c.config.ReadOnly {
+		return fmt.Errorf("cannot delete. Vault is protected by the 'readonly' attribute")
+	}
 	return c.deleteRecurse(path)
 }
 

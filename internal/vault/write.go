@@ -1,6 +1,7 @@
 package vault
 
 import (
+	"fmt"
 	"path"
 	"strings"
 
@@ -8,6 +9,9 @@ import (
 )
 
 func (c *Client) WriteSecrets(secrets map[string]interface{}, sourcePath, destinationPath string) error {
+	if c.config.ReadOnly {
+		return fmt.Errorf("cannot write. Vault is protected by the 'readonly' attribute")
+	}
 	for k, v := range secrets {
 		mergedPath := mergePaths(sourcePath, k, destinationPath)
 		_, err := c.Write(mergedPath, v.(map[string]interface{}))

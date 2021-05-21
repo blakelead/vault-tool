@@ -12,6 +12,7 @@ import (
 type Client struct {
 	vaultClient   *api.Client
 	engineVersion string
+	config        *config.Config
 }
 
 // NewClient returns a new Vault Client
@@ -48,10 +49,10 @@ func NewClient(path string, config *config.Config) (*Client, error) {
 		}
 	}
 	if version == "" {
-		return nil, fmt.Errorf("could not get engine version. This can happen if requested engine in not enabled, or root path does not exist")
+		return nil, fmt.Errorf("could not get engine version. This can happen when requested engine in not enabled, root path does not exist or configuration file is malformed")
 	}
 
-	return &Client{vaultClient, version}, nil
+	return &Client{vaultClient, version, config}, nil
 }
 
 // Close closes client by clearing the token

@@ -13,13 +13,15 @@ Create a configuration file:
 ```yaml
 # vault-tool.yaml
 source:
-  address: https://my-vault.com
-  token: mytoken
+  address: https://vault-server.com # Address of Vault server
+  token: s.token1                   # Token with enough rights to perform wanted tasks
+  insecure: true                    # Skip TLS verification (default: false)
+  readonly: true                    # Prevent write/delete operations (default: false)
 
 destination:
-  address: https://my-other-vault.com
+  address: https://other-vault-server.com
+  token: s.token2
   insecure: true
-  token: myothertoken
 ```
 
 Print secrets in path recursively:

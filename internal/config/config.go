@@ -7,6 +7,7 @@ type Config struct {
 	Address     string
 	Token       string
 	TLSInsecure bool
+	ReadOnly    bool
 }
 
 func GetSourceConfig() *Config {
@@ -22,5 +23,6 @@ func getConfig(t string) *Config {
 		Address:     viper.GetString(t + ".address"),
 		Token:       viper.GetString(t + ".token"),
 		TLSInsecure: viper.GetBool(t + ".insecure"),
+		ReadOnly:    viper.GetBool(t + ".readonly"),
 	}
 }
