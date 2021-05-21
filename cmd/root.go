@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 		vault-tool can copy, move and delete complete paths in one command.
 		It can also migrate secrets from one Vault to another.
 	`,
-	Version: "v0.0.1",
+	Version: "v0.0.2",
 }
 
 func Execute() {
