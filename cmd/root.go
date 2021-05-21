@@ -28,7 +28,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vault-tool.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", ".vault-tool.yaml", "config file (default is $HOME/.vault-tool.yaml)")
 }
 
 func initConfig() {
